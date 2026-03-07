@@ -1,0 +1,111 @@
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Loader2, Sparkles, TrendingUp, AlertTriangle, Info } from "lucide-react";
+import { fetchRecommendations, type Recommendation } from "@/lib/api";
+
+const impactConfig = {
+  high: { color: "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400", icon: AlertTriangle, border: "border-red-200 dark:border-red-500/20" },
+  medium: { color: "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-400", icon: TrendingUp, border: "border-amber-200 dark:border-amber-500/20" },
+  low: { color: "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400", icon: Info, border: "border-blue-200 dark:border-blue-500/20" },
+};
+
+export function AIInsightsPage() {
+  const [recs, setRecs] = useState<Recommendation[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchRecommendations().then(setRecs).catch(console.error).finally(() => setLoading(false));
+  }, []);
+
+  const grouped = { high: recs.filter(r => r.impact_level === "high"), medium: recs.filter(r => r.impact_level === "medium"), low: recs.filter(r => r.impact_level === "low") };
+
+  return (
+    <div className="flex-1 space-y-8 p-4 sm:p-6 lg:p-8 pt-6">
+      <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+            <Sparkles className="h-5 w-5 text-white" />
+          </div>
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">AI Insights</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">Agent 5 — Business recommendations generated from cross-agent analysis.</p>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Summary bar */}
+      {!loading && recs.length > 0 && (
+        <div className="grid grid-cols-3 gap-4">
+          {(["high", "medium", "low"] as const).map(level => {
+            const cfg = impactConfig[level];
+            const Icon = cfg.icon;
+            return (
+              <motion.div key={level} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                <Card className={`glass-card border ${cfg.border}`}>
+                  <CardContent className="p-4 flex items-center gap-3">
+                    <Icon className="h-5 w-5 flex-shrink-0" />
+                    <div>
+                      <p className="text-2xl font-bold">{grouped[level].length}</p>
+                      <p className="text-xs text-slate-500 capitalize">{level} impact</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
+
+      {loading && (
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="h-10 w-10 animate-spin text-indigo-500" />
+        </div>
+      )}
+
+      {!loading && recs.length === 0 && (
+        <Card className="glass-card">
+          <CardContent className="p-10 text-center">
+            <Sparkles className="h-12 w-12 text-indigo-300 mx-auto mb-4" />
+            <p className="text-slate-500 text-sm">No recommendations yet. Ensure harmonized_sales is populated and run <code className="text-indigo-600">generate_recommendations()</code> from Supabase SQL editor.</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Recommendation Cards */}
+      <div className="space-y-4">
+        {recs.map((rec, i) => {
+          const cfg = impactConfig[rec.impact_level ?? "low"];
+          const Icon = cfg.icon;
+          return (
+            <motion.div key={rec.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
+              <Card className={`glass-card border ${cfg.border} hover:shadow-xl transition-shadow`}>
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-4">
+                    <div className={`h-10 w-10 rounded-xl flex items-center justify-center flex-shrink-0 ${cfg.color}`}>
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-3 flex-wrap">
+                        <h3 className="font-semibold text-slate-900 dark:text-white text-sm leading-tight">{rec.title}</h3>
+                        <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold flex-shrink-0 ${cfg.color}`}>
+                          {rec.impact_level?.toUpperCase()}
+                        </span>
+                      </div>
+                      <p className="text-slate-600 dark:text-slate-400 text-sm mt-2 leading-relaxed">{rec.recommendation}</p>
+                      <div className="flex gap-3 mt-3 flex-wrap">
+                        {rec.category && <span className="text-xs bg-slate-100 dark:bg-slate-800 rounded-full px-2 py-0.5 text-slate-600 dark:text-slate-300">📦 {rec.category}</span>}
+                        {rec.channel && <span className="text-xs bg-slate-100 dark:bg-slate-800 rounded-full px-2 py-0.5 text-slate-600 dark:text-slate-300">📡 {rec.channel}</span>}
+                        {rec.region && <span className="text-xs bg-slate-100 dark:bg-slate-800 rounded-full px-2 py-0.5 text-slate-600 dark:text-slate-300">📍 {rec.region}</span>}
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
