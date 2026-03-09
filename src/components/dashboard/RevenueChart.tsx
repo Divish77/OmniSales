@@ -5,6 +5,7 @@ import {
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import type { MonthlyRevenue } from "@/lib/api";
+import { useCurrency } from "@/context/CurrencyContext";
 
 interface RevenueChartProps {
   data: MonthlyRevenue[];
@@ -12,6 +13,7 @@ interface RevenueChartProps {
 }
 
 export function RevenueChart({ data, loading }: RevenueChartProps) {
+  const { format } = useCurrency();
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -40,10 +42,10 @@ export function RevenueChart({ data, loading }: RevenueChartProps) {
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-slate-200 dark:text-slate-800" opacity={0.5} />
                   <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: "currentColor", opacity: 0.6 }} className="text-slate-600 dark:text-slate-400 text-xs" dy={10} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fill: "currentColor", opacity: 0.6 }} className="text-slate-600 dark:text-slate-400 text-xs" tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} width={60} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: "currentColor", opacity: 0.6 }} className="text-slate-600 dark:text-slate-400 text-xs" tickFormatter={(v) => format(v, true)} width={75} />
                   <Tooltip
                     contentStyle={{ backgroundColor: "var(--background)", borderRadius: "12px", border: "1px solid var(--border)", color: "var(--foreground)" }}
-                    formatter={(value: number) => [`$${value.toLocaleString()}`, "Revenue"]}
+                    formatter={(value: number) => [format(value), "Revenue"]}
                   />
                   <Line type="monotone" dataKey="revenue" stroke="#4f46e5" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 8, strokeWidth: 0, fill: "#4f46e5" }} animationDuration={1500} />
                 </LineChart>
