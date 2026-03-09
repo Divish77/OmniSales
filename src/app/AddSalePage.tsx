@@ -14,6 +14,7 @@ const CITIES = ["Mumbai", "Delhi", "Bangalore", "Chennai", "Hyderabad", "Kolkata
 
 const emptyForm = {
   date: new Date().toISOString().split("T")[0],
+  store_name: "",
   product_name: "",
   category: "",
   quantity: "",
@@ -62,8 +63,8 @@ export function AddSalePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.product_name || !form.category || !form.quantity || !form.price || !form.location) {
-      setErrorMsg("Please fill in all fields.");
+    if (!form.store_name || !form.product_name || !form.category || !form.quantity || !form.price || !form.location) {
+      setErrorMsg("Please fill in all fields, including Store Name.");
       setStatus("error");
       return;
     }
@@ -78,6 +79,7 @@ export function AddSalePage() {
     const locField = channel === "store" ? "city" : "location";
     const payload = {
       date: form.date,
+      store_name: form.store_name,
       product_name: form.product_name,
       category: form.category,
       quantity: parseInt(form.quantity),
@@ -141,6 +143,23 @@ export function AddSalePage() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Store Name — full width, required */}
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1">
+                    {channel === "store" ? "Store Name" : "Platform / Brand Name"}
+                    <span className="text-red-500 text-base leading-none">*</span>
+                  </label>
+                  <Input
+                    name="store_name"
+                    placeholder={channel === "store" ? "e.g. Divish Electronics — Andheri Branch" : "e.g. Amazon, Flipkart, My Website"}
+                    value={form.store_name}
+                    onChange={handleChange}
+                    className={`bg-white/50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 ${
+                      status === "error" && !form.store_name ? "border-red-400 focus:ring-red-400" : ""
+                    }`}
+                  />
+                </div>
+
                 {/* Date + Product */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
