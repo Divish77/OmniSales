@@ -34,6 +34,16 @@ export function ForecastsPage() {
 
   const COLORS = ["#4f46e5", "#8b5cf6", "#ec4899", "#06b6d4", "#f59e0b", "#10b981"];
 
+  // Robust month formatter — avoids timezone/locale new Date() failures
+  const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const formatMonth = (dateStr: string): string => {
+    if (!dateStr) return "—";
+    const parts = dateStr.split("-");
+    if (parts.length < 2) return dateStr;
+    const monthIdx = parseInt(parts[1], 10) - 1;
+    return `${MONTHS[monthIdx] ?? "?"} ${parts[0]}`;
+  };
+
   return (
     <div className="flex-1 space-y-8 p-4 sm:p-6 lg:p-8 pt-6">
       <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
@@ -81,7 +91,7 @@ export function ForecastsPage() {
                           </defs>
                           <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.4} />
                           <XAxis dataKey="month" tick={{ fontSize: 11 }}
-                            tickFormatter={(v) => new Date(v + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} />
+                            tickFormatter={formatMonth} />
                           <YAxis tickFormatter={(v) => format(v, true)} tick={{ fontSize: 11 }} width={75} />
                           <Tooltip formatter={(v: number) => [format(v), ""]} />
                           <Legend />
@@ -116,7 +126,7 @@ export function ForecastsPage() {
                     <tbody>
                       {sortedForecasts.map((f, i) => (
                         <tr key={i} className="border-b border-slate-100 dark:border-slate-800 hover:bg-white/40 dark:hover:bg-white/5 transition-colors">
-                          <td className="py-2 px-3 font-medium">{new Date(f.forecast_month + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</td>
+                          <td className="py-2 px-3 font-medium">{formatMonth(f.forecast_month)}</td>
                           <td className="py-2 px-3 text-slate-600 dark:text-slate-400">{f.category}</td>
                           <td className="py-2 px-3 text-right font-semibold text-indigo-600">{format(Number(f.predicted_revenue))}</td>
                           <td className="py-2 px-3 text-right">{f.predicted_quantity?.toLocaleString() ?? "—"}</td>
