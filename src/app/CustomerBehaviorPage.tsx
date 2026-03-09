@@ -27,7 +27,7 @@ export function CustomerBehaviorPage() {
     <div className="flex-1 space-y-8 p-4 sm:p-6 lg:p-8 pt-6">
       <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
         <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Customer Behavior</h2>
-        <p className="text-slate-500 dark:text-slate-400 mt-1">Agent 3 — Channel preferences, purchase trends, and loyalty patterns.</p>
+        <p className="text-slate-500 dark:text-slate-400 mt-1">Understand how your customers shop — which channel they prefer, how buying habits shift month to month, and which products keep them coming back.</p>
       </motion.div>
 
       <div className="grid gap-6 grid-cols-1 xl:grid-cols-2">

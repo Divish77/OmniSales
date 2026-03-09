@@ -29,7 +29,7 @@ export function SalesAnalyticsPage() {
     <div className="flex-1 space-y-8 p-4 sm:p-6 lg:p-8 pt-6">
       <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
         <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Sales Analytics</h2>
-        <p className="text-slate-500 dark:text-slate-400 mt-1">Agent 2 — Revenue breakdown across channels, categories and regions.</p>
+        <p className="text-slate-500 dark:text-slate-400 mt-1">See how your revenue splits between your online store and physical locations, which categories drive the most sales, and where your strongest regional demand is.</p>
       </motion.div>
 
       {/* Channel Split Cards */}

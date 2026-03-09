@@ -33,7 +33,7 @@ export function ForecastsPage() {
     <div className="flex-1 space-y-8 p-4 sm:p-6 lg:p-8 pt-6">
       <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
         <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Demand Forecast</h2>
-        <p className="text-slate-500 dark:text-slate-400 mt-1">Agent 4 — ML predictions using Linear Regression on historical sales trends.</p>
+        <p className="text-slate-500 dark:text-slate-400 mt-1">Get a look ahead at next month's demand. Our ML model learns from your sales history to predict which categories will grow, so you can plan inventory and budget before it happens.</p>
       </motion.div>
 
       {!loading && forecasts.length === 0 && (
