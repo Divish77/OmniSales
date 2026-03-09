@@ -12,7 +12,6 @@ import { AIInsightsPage } from "@/app/AIInsightsPage";
 import { AddSalePage } from "@/app/AddSalePage";
 import { supabase } from "@/lib/supabase";
 import { CurrencyProvider } from "@/context/CurrencyContext";
-import { CustomCursor } from "@/components/ui/CustomCursor";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import type { Session } from "@supabase/supabase-js";
 
@@ -46,7 +45,6 @@ function AnimatedRoutes() {
 function AppLayout() {
   return (
     <CurrencyProvider>
-      <CustomCursor />
       <ScrollProgress />
       <div className="flex bg-slate-50 dark:bg-transparent min-h-screen transition-colors duration-300">
         <Sidebar />

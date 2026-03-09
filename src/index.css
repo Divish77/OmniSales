@@ -158,12 +158,8 @@ html {
   scroll-behavior: smooth;
 }
 
-/* ── Hide default cursor (replaced by CustomCursor component) ─────────── */
-* {
-  cursor: none !important;
-}
 
-/* ── Premium custom scrollbar ─────────────────────────────────────────── */
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
