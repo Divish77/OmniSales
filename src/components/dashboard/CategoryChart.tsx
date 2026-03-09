@@ -30,12 +30,12 @@ export function CategoryChart({ data, loading }: CategoryChartProps) {
     >
       <Card className="glass-card h-full">
         <CardHeader>
-          <CardTitle className="text-base font-semibold text-slate-800 dark:text-slate-100">
+          <CardTitle className="text-sm xs:text-base font-semibold text-slate-800 dark:text-slate-100">
             Sales by Category
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[180px] sm:h-[220px] lg:h-[260px] w-full flex items-center justify-center">
+          <div className="h-[140px] xs:h-[160px] sm:h-[200px] lg:h-[260px] w-full flex items-center justify-center">
             {loading ? (
               <Loader2 className="h-8 w-8 animate-spin text-indigo-500" />
             ) : (

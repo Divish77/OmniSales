@@ -13,61 +13,61 @@ export function MainKpiCards({ totalRevenue, totalOrders, loading }: MainKpiCard
   
   if (loading) {
     return (
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-3 min-h-[200px]">
+      <div className="grid gap-3 xs:gap-4 grid-cols-1 sm:grid-cols-3 min-h-[180px] xs:min-h-[200px]">
         <div className="lg:col-span-2 glass-card bg-pastel-blue-teal rounded-[30px] flex items-center justify-center border-0 shadow-sm relative overflow-hidden">
-          <Loader2 className="h-10 w-10 animate-spin text-white/50" />
+          <Loader2 className="h-8 xs:h-10 w-8 xs:w-10 animate-spin text-white/50" />
         </div>
         <div className="glass-card bg-pastel-peach-beige rounded-[30px] flex items-center justify-center shadow-sm border-0 relative overflow-hidden">
-          <Loader2 className="h-10 w-10 animate-spin text-orange-400/50" />
+          <Loader2 className="h-8 xs:h-10 w-8 xs:w-10 animate-spin text-orange-400/50" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
+    <div className="grid gap-3 xs:gap-4 grid-cols-1 sm:grid-cols-3">
       {/* Large KPI Card - Revenue */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="lg:col-span-2 glass-card bg-pastel-blue-teal rounded-[40px] p-5 sm:p-7 flex flex-col shadow-sm border-0 relative overflow-hidden h-full min-h-[240px]"
+        className="lg:col-span-2 glass-card bg-pastel-blue-teal rounded-[30px] xs:rounded-[35px] sm:rounded-[40px] p-4 xs:p-5 sm:p-7 flex flex-col shadow-sm border-0 relative overflow-hidden h-full min-h-[200px] xs:min-h-[220px] sm:min-h-[240px]"
       >
         {/* Content */}
         <div className="relative z-10 flex flex-col h-full">
-          <h3 className="text-white text-lg font-medium opacity-90 mb-2">Total Revenue</h3>
+          <h3 className="text-white text-base xs:text-lg font-medium opacity-90 mb-1.5 xs:mb-2">Total Revenue</h3>
           
-          <div className="flex items-start gap-1 mb-6 mt-1">
-            <span className="text-3xl font-bold text-white/70 mt-2">$</span>
-            <span className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tighter text-white leading-none">
+          <div className="flex items-start gap-0.5 xs:gap-1 mb-4 xs:mb-6 mt-1">
+            <span className="text-2xl xs:text-3xl font-bold text-white/70 mt-1 xs:mt-2">$</span>
+            <span className="text-3xl xs:text-4xl sm:text-5xl lg:text-6xl font-black tracking-tighter text-white leading-none">
               {totalRevenue.toLocaleString()}
             </span>
           </div>
           
-          <div className="flex gap-8 mt-2">
-            <div className="flex items-center gap-2">
-              <div className="bg-white/10 p-1.5 rounded-full"><Eye className="w-3 h-3 text-white/80" /></div>
+          <div className="flex gap-4 xs:gap-6 sm:gap-8 mt-1 xs:mt-2">
+            <div className="flex items-center gap-1.5 xs:gap-2">
+              <div className="bg-white/10 p-1 xs:p-1.5 rounded-full"><Eye className="w-2.5 xs:w-3 h-2.5 xs:h-3 text-white/80" /></div>
               <div>
-                <div className="text-white/60 text-xs font-medium">Views</div>
-                <div className="text-white font-bold text-base leading-tight">24.5k</div>
+                <div className="text-white/60 text-[10px] xs:text-xs font-medium">Views</div>
+                <div className="text-white font-bold text-xs xs:text-sm leading-tight">24.5k</div>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="bg-white/10 p-1.5 rounded-full"><Activity className="w-3 h-3 text-white/80" /></div>
+            <div className="flex items-center gap-1.5 xs:gap-2">
+              <div className="bg-white/10 p-1 xs:p-1.5 rounded-full"><Activity className="w-2.5 xs:w-3 h-2.5 xs:h-3 text-white/80" /></div>
               <div>
-                <div className="text-white/60 text-xs font-medium">Conversion</div>
-                <div className="text-white font-bold text-base leading-tight">3.2%</div>
+                <div className="text-white/60 text-[10px] xs:text-xs font-medium">Conversion</div>
+                <div className="text-white font-bold text-xs xs:text-sm leading-tight">3.2%</div>
               </div>
             </div>
           </div>
 
-          <div className="mt-auto pt-5">
+          <div className="mt-auto pt-3 xs:pt-4 sm:pt-5">
             <button 
               onClick={() => navigate('/sales')} 
-              className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-6 py-3 rounded-2xl font-bold text-xs uppercase tracking-[0.15em] flex items-center shadow-xl transition-all group w-fit border border-white/10"
+              className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-4 xs:px-5 sm:px-6 py-2.5 xs:py-3 rounded-2xl font-bold text-[10px] xs:text-xs uppercase tracking-[0.12em] xs:tracking-[0.15em] flex items-center shadow-xl transition-all group w-fit border border-white/10"
             >
               View full statistic 
-              <ChevronRight className="w-4 h-4 ml-3 group-hover:translate-x-1 transition-transform" />
+              <ChevronRight className="w-3 xs:w-4 h-3 xs:h-4 ml-2 xs:ml-3 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         </div>
@@ -82,18 +82,18 @@ export function MainKpiCards({ totalRevenue, totalOrders, loading }: MainKpiCard
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="glass-card bg-pastel-peach-beige rounded-[40px] flex flex-col shadow-sm border-0 relative overflow-hidden h-full group"
+        className="glass-card bg-pastel-peach-beige rounded-[30px] xs:rounded-[35px] sm:rounded-[40px] flex flex-col shadow-sm border-0 relative overflow-hidden h-full group"
       >
-        <div className="p-5 sm:p-7 flex-1">
-          <div className="flex justify-between items-start mb-7">
-            <h3 className="text-[#13313D] text-xl font-bold tracking-tight">Total Orders</h3>
-            <div className="bg-white p-2.5 rounded-2xl border border-white shadow-sm flex items-center justify-center">
-              <ShoppingBag className="w-5 h-5 text-orange-500" strokeWidth={2.5} />
+        <div className="p-4 xs:p-5 sm:p-7 flex-1">
+          <div className="flex justify-between items-start mb-5 xs:mb-6 sm:mb-7">
+            <h3 className="text-[#13313D] text-lg xs:text-xl font-bold tracking-tight">Total Orders</h3>
+            <div className="bg-white p-2 xs:p-2.5 rounded-2xl border border-white shadow-sm flex items-center justify-center">
+              <ShoppingBag className="w-4 xs:w-5 h-4 xs:h-5 text-orange-500" strokeWidth={2.5} />
             </div>
           </div>
           
-          <div className="flex items-center gap-3 mb-6">
-            <span className="text-5xl font-black tracking-tighter text-[#13313D] leading-none">
+          <div className="flex items-center gap-2 xs:gap-3 mb-4 xs:mb-6">
+            <span className="text-3xl xs:text-4xl sm:text-5xl font-black tracking-tighter text-[#13313D] leading-none">
               {totalOrders.toLocaleString()}
             </span>
             <div className="bg-white/90 text-[#059669] text-xs font-bold px-2.5 py-1.5 rounded-xl border border-white shadow-sm flex items-center h-fit mt-1">

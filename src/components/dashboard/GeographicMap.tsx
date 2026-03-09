@@ -12,11 +12,11 @@ export function GeographicMap({ data, loading }: GeographicMapProps) {
   const { format } = useCurrency();
 
   return (
-    <Card className="glass-card border-0 bg-white relative overflow-hidden h-full min-h-[280px] flex flex-col">
-      <CardHeader className="pb-2 z-10 relative shrink-0">
-        <CardTitle className="text-base font-semibold text-slate-800">Targeting by region</CardTitle>
+    <Card className="glass-card border-0 bg-white relative overflow-hidden h-full min-h-[260px] xs:min-h-[270px] sm:min-h-[280px] flex flex-col">
+      <CardHeader className="pb-1.5 xs:pb-2 z-10 relative shrink-0">
+        <CardTitle className="text-sm xs:text-base font-semibold text-slate-800">Targeting by region</CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 relative px-3 pb-3 flex flex-col z-10 min-h-0">
+      <CardContent className="flex-1 relative px-2.5 xs:px-3 pb-2.5 xs:pb-3 flex flex-col z-10 min-h-0">
         {/* Abstract Map Background using basic CSS shapes to simulate a world map briefly */}
         <div className="absolute inset-0 opacity-5 pointer-events-none flex flex-wrap gap-1 p-8 items-center justify-center overflow-hidden">
             {Array.from({length: 150}).map((_, i) => (

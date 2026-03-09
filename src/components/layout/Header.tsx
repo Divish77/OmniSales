@@ -23,14 +23,14 @@ function CurrencySelector() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-semibold
+        className="flex items-center justify-center gap-1 xs:gap-1.5 rounded-lg xs:rounded-xl px-2 xs:px-3 py-1.5 xs:py-2 text-xs xs:text-sm font-semibold min-h-[44px] min-w-[44px]
           bg-white/40 dark:bg-slate-800/40 border border-white/30 dark:border-slate-700/40
           backdrop-blur-sm text-slate-700 dark:text-slate-200
           hover:bg-white/60 dark:hover:bg-slate-700/60 transition-all duration-200 shadow-sm"
       >
-        <span className="text-base leading-none">{currency.symbol}</span>
-        <span className="hidden sm:inline">{currency.code}</span>
-        <ChevronDown className={`h-3.5 w-3.5 text-slate-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+        <span className="text-sm xs:text-base leading-none">{currency.symbol}</span>
+        <span className="hidden xs:inline">{currency.code}</span>
+        <ChevronDown className={`h-3 xs:h-3.5 w-3 xs:w-3.5 text-slate-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open && (
@@ -128,23 +128,18 @@ function ProfileDropdown() {
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 flex h-[70px] sm:h-[86px] lg:h-[100px] items-center justify-between px-3 sm:px-6
+    <header className="sticky top-0 z-40 flex h-[60px] xs:h-[70px] sm:h-[86px] lg:h-[100px] items-center justify-between px-2.5 xs:px-3 sm:px-6
       bg-transparent transition-all duration-300">
 
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-2 xs:gap-3 sm:gap-8">
         <MobileMenu />
-        
-
       </div>
 
-      <div className="flex items-center gap-6">
-
+      <div className="flex items-center gap-2 xs:gap-4 sm:gap-6">
         {/* Currency Selector */}
         <CurrencySelector />
 
-        <div className="flex items-center gap-2">
-
-
+        <div className="flex items-center gap-2 xs:gap-2">
           <ProfileDropdown />
         </div>
       </div>
