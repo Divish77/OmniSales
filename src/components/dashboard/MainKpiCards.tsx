@@ -82,46 +82,29 @@ export function MainKpiCards({ totalRevenue, totalOrders, loading }: MainKpiCard
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="glass-card bg-pastel-peach-beige rounded-[30px] xs:rounded-[35px] sm:rounded-[40px] flex flex-col shadow-sm border-0 relative overflow-hidden h-full group"
+        className="glass-card bg-pastel-peach-beige rounded-[30px] xs:rounded-[35px] sm:rounded-[40px] shadow-sm border-0 relative overflow-hidden h-full group flex flex-col items-center justify-center"
       >
-        <div className="p-4 xs:p-5 sm:p-7 flex-1">
-          <div className="flex justify-between items-start mb-5 xs:mb-6 sm:mb-7">
-            <h3 className="text-[#13313D] text-lg xs:text-xl font-bold tracking-tight">Total Orders</h3>
-            <div className="bg-white p-2 xs:p-2.5 rounded-2xl border border-white shadow-sm flex items-center justify-center">
-              <ShoppingBag className="w-4 xs:w-5 h-4 xs:h-5 text-orange-500" strokeWidth={2.5} />
+        <div className="p-4 xs:p-5 sm:p-7 w-full flex flex-col items-center text-center">
+          <div className="mb-3 xs:mb-4">
+            <div className="bg-white p-2.5 xs:p-3 rounded-2xl border border-white shadow-sm flex items-center justify-center mx-auto">
+              <ShoppingBag className="w-5 xs:w-6 h-5 xs:h-6 text-orange-500" strokeWidth={2.5} />
             </div>
           </div>
           
-          <div className="flex items-center gap-2 xs:gap-3 mb-4 xs:mb-6">
-            <span className="text-3xl xs:text-4xl sm:text-5xl font-black tracking-tighter text-[#13313D] leading-none">
+          <h3 className="text-[#13313D] text-base xs:text-lg font-bold tracking-tight mb-2 xs:mb-3">Total Orders</h3>
+          
+          <div className="flex items-center gap-2 xs:gap-3 mb-3 xs:mb-4">
+            <span className="text-4xl xs:text-5xl sm:text-6xl font-black tracking-tighter text-[#13313D] leading-none">
               {totalOrders.toLocaleString()}
             </span>
-            <div className="bg-white/90 text-[#059669] text-xs font-bold px-2.5 py-1.5 rounded-xl border border-white shadow-sm flex items-center h-fit mt-1">
+            <div className="bg-white/90 text-[#059669] text-xs font-bold px-2.5 py-1.5 rounded-xl border border-white shadow-sm flex items-center h-fit">
               +12%
             </div>
           </div>
 
-          <p className="text-[#516E7B] text-sm leading-[1.5] font-medium pr-4">
-            Your store is experiencing higher demand. <span className="text-[#13313D] font-black">Keep managing</span> inventory to fulfill all orders!
+          <p className="text-[#516E7B] text-xs xs:text-sm leading-[1.5] font-medium max-w-[200px]">
+            Your store is experiencing higher demand. Keep managing inventory!
           </p>
-        </div>
-
-        {/* Footer Section */}
-        <div className="mt-auto px-5 pb-5">
-          <div className="w-full h-[1px] bg-[#E5E9EB]/50 mb-4" />
-          <button className="w-full flex items-center justify-between group/footer">
-            <div className="flex items-center gap-3">
-              <div className="text-xl">📦</div>
-              <div className="text-left">
-                <p className="text-[13px] font-bold text-[#516E7B] group-hover:text-[#13313D] transition-colors leading-tight">
-                  View all pending and <br /> shipped orders.
-                </p>
-              </div>
-            </div>
-            <div className="h-8 w-8 rounded-full border border-slate-200 flex items-center justify-center group-hover:border-[#13313D] group-hover:bg-[#13313D] transition-all bg-white shadow-sm">
-              <ChevronRight className="w-4 h-4 text-[#13313D] group-hover:text-white transition-colors" />
-            </div>
-          </button>
         </div>
       </motion.div>
     </div>
