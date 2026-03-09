@@ -10,6 +10,7 @@ export function SalesAnalyticsPage() {
   const [categories, setCategories] = useState<CategoryPerformance[]>([]);
   const [regions, setRegions] = useState<RegionalDemand[]>([]);
   const [loading, setLoading] = useState(true);
+  const { format } = useCurrency();
 
   useEffect(() => {
     Promise.all([fetchChannelRevenue(), fetchCategoryPerformance(), fetchRegionalDemand()])
@@ -69,7 +70,7 @@ export function SalesAnalyticsPage() {
                           style={{ width: `${Math.min(100, (Number(cat.revenue) / (categories[0]?.revenue || 1)) * 100)}%` }} />
                       </div>
                       <div className="text-right w-24">
-                        <p className="text-sm font-semibold">${Number(cat.revenue).toLocaleString()}</p>
+                        <p className="text-sm font-semibold">{format(Number(cat.revenue), true)}</p>
                         <p className="text-xs text-slate-400">{cat.channel_split}</p>
                       </div>
                     </div>
@@ -92,7 +93,7 @@ export function SalesAnalyticsPage() {
                       <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.4} />
                       <XAxis dataKey="region" angle={-30} textAnchor="end" tick={{ fontSize: 11 }} />
                       <YAxis tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} tick={{ fontSize: 11 }} />
-                      <Tooltip formatter={(v: number) => [`$${v.toLocaleString()}`, "Revenue"]} />
+                      <Tooltip formatter={(v: number) => [format(v, true), "Revenue"]} />
                       <Bar dataKey="revenue" fill="url(#regionGrad)" radius={[4,4,0,0]} />
                       <defs>
                         <linearGradient id="regionGrad" x1="0" y1="0" x2="0" y2="1">

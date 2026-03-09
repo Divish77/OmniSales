@@ -23,3 +23,5 @@ npm-debug.log*
 # Temp scripts
 run_schema*.mjs
 run_agents*.mjs
+
+.vercel

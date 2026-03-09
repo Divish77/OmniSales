@@ -5,15 +5,12 @@ import { RevenueChart } from "@/components/dashboard/RevenueChart";
 import { ProductChart } from "@/components/dashboard/ProductChart";
 import { CategoryChart } from "@/components/dashboard/CategoryChart";
 import { useDashboardData } from "@/hooks/useDashboardData";
+import { useCurrency } from "@/context/CurrencyContext";
 
-function formatCurrency(n: number) {
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `$${(n / 1_000).toFixed(1)}K`;
-  return `$${n.toFixed(0)}`;
-}
 
 export function Dashboard() {
   const { totalRevenue, monthlyRevenue, topProducts, categories, loading, error } = useDashboardData();
+  const { format } = useCurrency();
 
   return (
     <div className="flex-1 space-y-8 p-4 sm:p-6 lg:p-8 pt-6">
@@ -53,7 +50,7 @@ export function Dashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <KPICard
           title="Total Revenue"
-          metric={loading ? "…" : formatCurrency(totalRevenue)}
+          metric={loading ? "…" : format(totalRevenue, true)}
           trend="+24.5%"
           icon={DollarSign}
           delay={0.1}
