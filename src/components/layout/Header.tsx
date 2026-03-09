@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect } from "react";
-import { Bell, Search, ChevronDown, UserCircle } from "lucide-react";
+import { Bell, Search, ChevronDown, UserCircle, LogOut, Settings as SettingsIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MobileMenu } from "./MobileMenu";
 import { useCurrency, CURRENCIES, type CurrencyInfo } from "@/context/CurrencyContext";
+import { supabase } from "@/lib/supabase";
+import type { Session } from "@supabase/supabase-js";
 
 function CurrencySelector() {
   const { currency, setCurrency } = useCurrency();
@@ -61,6 +62,71 @@ function CurrencySelector() {
   );
 }
 
+function ProfileDropdown() {
+  const [open, setOpen] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => setSession(session));
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    window.location.href = "/";
+  };
+
+  const user = session?.user;
+  const provider = user?.app_metadata?.provider || "email";
+
+  return (
+    <div ref={ref} className="relative ml-1 hidden sm:block">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 border-2 border-white/50 dark:border-slate-700 shadow-sm text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+      >
+        <UserCircle className="h-6 w-6" strokeWidth={1.5} />
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-64 rounded-2xl border border-white/30 dark:border-slate-700/40
+          bg-white/90 dark:bg-slate-900/95 backdrop-blur-2xl shadow-2xl shadow-indigo-500/10 z-50 overflow-hidden">
+          
+          <div className="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+            <p className="font-semibold text-slate-900 dark:text-white truncate">
+              {user?.user_metadata?.full_name || "OmniSales User"}
+            </p>
+            <p className="text-xs text-slate-500 truncate mt-0.5">{user?.email}</p>
+            <div className="mt-2 text-[10px] font-medium px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 inline-block capitalize">
+              {provider} Account
+            </div>
+          </div>
+
+          <div className="p-1.5">
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors font-medium"
+            >
+              <LogOut className="h-4 w-4" />
+              Sign Out
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function Header() {
   return (
     <header className="sticky top-0 z-40 flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8
@@ -100,9 +166,7 @@ export function Header() {
             <Bell className="h-5 w-5 text-slate-600 dark:text-slate-300" />
           </Button>
 
-          <div className="ml-1 hidden sm:flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 border-2 border-white/50 dark:border-slate-700 shadow-sm text-slate-500 dark:text-slate-400">
-            <UserCircle className="h-6 w-6" strokeWidth={1.5} />
-          </div>
+          <ProfileDropdown />
         </div>
       </div>
     </header>

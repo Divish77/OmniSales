@@ -54,21 +54,7 @@ export function Sidebar() {
         </nav>
 
         {/* User Profile / Settings */}
-        <div className="mt-auto pt-6 border-t border-slate-200/20 dark:border-slate-800/20">
-          <NavLink
-            to="/settings"
-            className={({ isActive }) =>
-              `flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-300 ${
-                isActive
-                  ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400"
-                  : "text-slate-600 dark:text-slate-400 hover:bg-white/5 hover:text-slate-900 dark:hover:text-slate-100"
-              }`
-            }
-          >
-            <Settings className="h-5 w-5" />
-            Settings
-          </NavLink>
-        </div>
+        
       </div>
     </div>
   );
