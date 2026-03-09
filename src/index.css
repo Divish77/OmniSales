@@ -137,21 +137,29 @@
 /* Glassmorphism utilities */
 @layer utilities {
   .glass {
-    @apply bg-white/10 dark:bg-black/20 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-xl;
+    @apply bg-white/60 dark:bg-[#0B0F19]/60 backdrop-blur-2xl border border-white/50 dark:border-white/5 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3)];
   }
 
   .glass-card {
-    @apply bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-lg rounded-xl transition-all duration-300;
+    @apply bg-white/70 dark:bg-[#111827]/60 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-lg rounded-2xl transition-all duration-300 relative overflow-hidden;
+  }
+  
+  /* Inner light effect for premium glass depth */
+  .glass-card::before {
+    content: '';
+    @apply absolute inset-0 rounded-2xl pointer-events-none border border-white/40 dark:border-white/5 mix-blend-overlay;
   }
 
   .glass-card:hover {
-    @apply shadow-2xl border-white/60 dark:border-white/20 transform -translate-y-1;
+    @apply shadow-2xl border-indigo-200/50 dark:border-indigo-500/30 transform -translate-y-1;
+    box-shadow: 0 20px 40px -12px rgba(99,102,241,0.15), 0 0 0 1px rgba(99,102,241,0.1);
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400;
   }
 }
+
 
 /* ── Smooth Scroll ────────────────────────────────────────────────────── */
 html {
