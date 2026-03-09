@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Bell, Search, ChevronDown } from "lucide-react";
+import { Bell, Search, ChevronDown, UserCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MobileMenu } from "./MobileMenu";
@@ -100,11 +100,9 @@ export function Header() {
             <Bell className="h-5 w-5 text-slate-600 dark:text-slate-300" />
           </Button>
 
-          <img
-            className="h-9 w-9 rounded-full border-2 border-white/50 shadow-sm ml-1 hidden sm:block"
-            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-            alt="User avatar"
-          />
+          <div className="ml-1 hidden sm:flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 border-2 border-white/50 dark:border-slate-700 shadow-sm text-slate-500 dark:text-slate-400">
+            <UserCircle className="h-6 w-6" strokeWidth={1.5} />
+          </div>
         </div>
       </div>
     </header>
