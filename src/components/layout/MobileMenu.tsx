@@ -2,7 +2,7 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, LayoutDashboard, BarChart3, Users, TrendingUp, Sparkles, Settings } from "lucide-react";
+import { Menu, LayoutDashboard, BarChart3, Users, TrendingUp, Sparkles, Settings, PlusCircle } from "lucide-react";
 
 const navItems = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -10,6 +10,7 @@ const navItems = [
   { name: "Customer Behavior", href: "/behavior", icon: Users },
   { name: "Forecasts", href: "/forecasts", icon: TrendingUp },
   { name: "AI Insights", href: "/insights", icon: Sparkles },
+  { name: "Add Sale", href: "/add-sale", icon: PlusCircle },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 

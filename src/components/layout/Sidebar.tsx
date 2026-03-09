@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, BarChart3, Users, TrendingUp, Sparkles, Settings, User } from "lucide-react";
+import { LayoutDashboard, BarChart3, Users, TrendingUp, Sparkles, Settings, User, PlusCircle } from "lucide-react";
 
 const navItems = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -7,6 +7,7 @@ const navItems = [
   { name: "Customer Behavior", href: "/behavior", icon: Users },
   { name: "Forecasts", href: "/forecasts", icon: TrendingUp },
   { name: "AI Insights", href: "/insights", icon: Sparkles },
+  { name: "Add Sale", href: "/add-sale", icon: PlusCircle },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 

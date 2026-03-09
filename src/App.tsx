@@ -8,6 +8,7 @@ import { SalesAnalyticsPage } from "@/app/SalesAnalyticsPage";
 import { CustomerBehaviorPage } from "@/app/CustomerBehaviorPage";
 import { ForecastsPage } from "@/app/ForecastsPage";
 import { AIInsightsPage } from "@/app/AIInsightsPage";
+import { AddSalePage } from "@/app/AddSalePage";
 import { supabase } from "@/lib/supabase";
 import { CurrencyProvider } from "@/context/CurrencyContext";
 import type { Session } from "@supabase/supabase-js";
@@ -27,6 +28,7 @@ function AppLayout() {
               <Route path="/behavior" element={<CustomerBehaviorPage />} />
               <Route path="/forecasts" element={<ForecastsPage />} />
               <Route path="/insights" element={<AIInsightsPage />} />
+              <Route path="/add-sale" element={<AddSalePage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
