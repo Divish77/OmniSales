@@ -41,7 +41,7 @@ export function ForecastsPage() {
   const COLORS = ["#4f46e5", "#8b5cf6", "#ec4899", "#06b6d4", "#f59e0b", "#10b981"];
 
   // Robust month formatter — avoids timezone/locale new Date() failures
-  const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const formatMonth = (dateStr: string): string => {
     if (!dateStr) return "—";
     const parts = dateStr.split("-");

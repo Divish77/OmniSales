@@ -1,6 +1,5 @@
-import { Bell, Search, ChevronDown, UserCircle, LogOut, Settings as SettingsIcon } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect, useRef } from "react";
+import { ChevronDown, UserCircle, LogOut } from "lucide-react";
 import { MobileMenu } from "./MobileMenu";
 import { useCurrency, CURRENCIES, type CurrencyInfo } from "@/context/CurrencyContext";
 import { supabase } from "@/lib/supabase";
@@ -129,42 +128,22 @@ function ProfileDropdown() {
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8
-      glass border-x-0 border-t-0 bg-white/30 dark:bg-slate-950/30 backdrop-blur-2xl transition-all duration-300">
+    <header className="sticky top-0 z-40 flex h-[70px] sm:h-[86px] lg:h-[100px] items-center justify-between px-3 sm:px-6
+      bg-transparent transition-all duration-300">
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-8">
         <MobileMenu />
-        <div className="hidden sm:flex items-center">
-          <h1 className="text-xl font-bold sm:text-2xl text-slate-900 dark:text-white">
-            Dashboard Overview
-          </h1>
-        </div>
+        
+
       </div>
 
-      <div className="flex items-center gap-3">
-        {/* Search */}
-        <div className="relative hidden md:block w-64">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <Search className="h-4 w-4 text-slate-400" />
-          </div>
-          <Input
-            id="search"
-            className="block w-full rounded-full border-0 bg-white/40 dark:bg-slate-800/40 py-2 pl-10 pr-3 text-sm
-              placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:bg-white dark:focus:bg-slate-800
-              transition-all duration-300 shadow-sm backdrop-blur-sm"
-            placeholder="Search analytics..."
-            type="search"
-          />
-        </div>
+      <div className="flex items-center gap-6">
 
         {/* Currency Selector */}
         <CurrencySelector />
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="relative rounded-full hover:bg-white/20">
-            <span className="absolute top-2.5 right-2.5 h-2 w-2 rounded-full bg-red-500 border-2 border-white dark:border-slate-900" />
-            <Bell className="h-5 w-5 text-slate-600 dark:text-slate-300" />
-          </Button>
+
 
           <ProfileDropdown />
         </div>

@@ -5,9 +5,13 @@ import {
   fetchMonthlyRevenue,
   fetchTopProducts,
   fetchCategoryDistribution,
+  fetchRegionalDemand,
+  fetchChannelRevenue,
   type MonthlyRevenue,
   type TopProduct,
   type CategorySlice,
+  type RegionalDemand,
+  type ChannelRevenue,
 } from "@/lib/api";
 
 export type DashboardData = {
@@ -15,6 +19,9 @@ export type DashboardData = {
   monthlyRevenue: MonthlyRevenue[];
   topProducts: TopProduct[];
   categories: CategorySlice[];
+  regionalDemand: RegionalDemand[];
+  channelRevenue: ChannelRevenue[];
+  totalOrders: number;
   loading: boolean;
   error: string | null;
 };
@@ -24,6 +31,8 @@ export function useDashboardData(): DashboardData {
   const [monthlyRevenue, setMonthlyRevenue] = useState<MonthlyRevenue[]>([]);
   const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
   const [categories, setCategories] = useState<CategorySlice[]>([]);
+  const [regionalDemand, setRegionalDemand] = useState<RegionalDemand[]>([]);
+  const [channelRevenue, setChannelRevenue] = useState<ChannelRevenue[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,16 +40,20 @@ export function useDashboardData(): DashboardData {
     try {
       setLoading(true);
       setError(null);
-      const [rev, monthly, products, cats] = await Promise.all([
+      const [rev, monthly, products, cats, regional, channels] = await Promise.all([
         fetchTotalRevenue(),
         fetchMonthlyRevenue(),
         fetchTopProducts(),
         fetchCategoryDistribution(),
+        fetchRegionalDemand(),
+        fetchChannelRevenue()
       ]);
       setTotalRevenue(rev);
       setMonthlyRevenue(monthly);
       setTopProducts(products);
       setCategories(cats);
+      setRegionalDemand(regional);
+      setChannelRevenue(channels);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
@@ -58,5 +71,7 @@ export function useDashboardData(): DashboardData {
     return () => { supabase.removeChannel(channel); };
   }, [load]);
 
-  return { totalRevenue, monthlyRevenue, topProducts, categories, loading, error };
+  const totalOrders = channelRevenue.reduce((sum, channel) => sum + channel.orders, 0);
+
+  return { totalRevenue, monthlyRevenue, topProducts, categories, regionalDemand, channelRevenue, totalOrders, loading, error };
 }

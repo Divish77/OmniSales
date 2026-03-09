@@ -26,16 +26,16 @@ export function CategoryChart({ data, loading }: CategoryChartProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.4 }}
-      className="col-span-1 lg:col-span-1 xl:col-span-2"
+      className="col-span-1"
     >
       <Card className="glass-card h-full">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+          <CardTitle className="text-base font-semibold text-slate-800 dark:text-slate-100">
             Sales by Category
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px] w-full flex items-center justify-center">
+          <div className="h-[180px] sm:h-[220px] lg:h-[260px] w-full flex items-center justify-center">
             {loading ? (
               <Loader2 className="h-8 w-8 animate-spin text-indigo-500" />
             ) : (
@@ -58,14 +58,14 @@ export function CategoryChart({ data, loading }: CategoryChartProps) {
                   </Pie>
                   <Tooltip
                     contentStyle={{ backgroundColor: "var(--background)", borderRadius: "12px", border: "1px solid var(--border)", color: "var(--foreground)" }}
-                    formatter={(value: number) => [`${value}%`, "Share"]}
+                    formatter={(value: any) => [`${value}%`, "Share"]}
                   />
-                  <Legend 
-                    layout="vertical" 
-                    verticalAlign="middle" 
-                    align="right" 
-                    iconType="circle" 
-                    wrapperStyle={{ fontSize: "13px", right: 0, lineHeight: "24px" }} 
+                  <Legend
+                    layout="vertical"
+                    verticalAlign="middle"
+                    align="right"
+                    iconType="circle"
+                    wrapperStyle={{ fontSize: "13px", right: 0, lineHeight: "24px" }}
                   />
                 </PieChart>
               </ResponsiveContainer>

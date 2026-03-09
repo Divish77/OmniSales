@@ -19,16 +19,16 @@ export function RevenueChart({ data, loading }: RevenueChartProps) {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, delay: 0.2 }}
-      className="col-span-1 lg:col-span-2 xl:col-span-4"
+      className="col-span-1 lg:col-span-3"
     >
       <Card className="glass-card">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+          <CardTitle className="text-base font-semibold text-slate-800 dark:text-slate-100">
             Monthly Sales Growth
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[350px] w-full flex items-center justify-center">
+          <div className="h-[200px] sm:h-[240px] lg:h-[280px] w-full flex items-center justify-center">
             {loading ? (
               <Loader2 className="h-8 w-8 animate-spin text-indigo-500" />
             ) : (
@@ -45,7 +45,7 @@ export function RevenueChart({ data, loading }: RevenueChartProps) {
                   <YAxis axisLine={false} tickLine={false} tick={{ fill: "currentColor", opacity: 0.6 }} className="text-slate-600 dark:text-slate-400 text-xs" tickFormatter={(v) => format(v, true)} width={75} />
                   <Tooltip
                     contentStyle={{ backgroundColor: "var(--background)", borderRadius: "12px", border: "1px solid var(--border)", color: "var(--foreground)" }}
-                    formatter={(value: number) => [format(value), "Revenue"]}
+                    formatter={(value: any) => [format(value), "Revenue"]}
                   />
                   <Line type="monotone" dataKey="revenue" stroke="#4f46e5" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 8, strokeWidth: 0, fill: "#4f46e5" }} animationDuration={1500} />
                 </LineChart>

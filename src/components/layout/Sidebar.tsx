@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, BarChart3, Users, TrendingUp, Sparkles, Settings, User, PlusCircle } from "lucide-react";
+import { LayoutDashboard, BarChart3, Users, TrendingUp, Sparkles, PlusCircle } from "lucide-react";
 
 const navItems = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -8,22 +8,21 @@ const navItems = [
   { name: "Forecasts", href: "/forecasts", icon: TrendingUp },
   { name: "AI Insights", href: "/insights", icon: Sparkles },
   { name: "Add Sale", href: "/add-sale", icon: PlusCircle },
-  { name: "Settings", href: "/settings", icon: Settings },
 ];
 
 export function Sidebar() {
   return (
-    <div className="hidden md:flex md:w-64 md:flex-col lg:w-72 fixed inset-y-0 left-0 z-50">
-      <div className="flex flex-col flex-grow glass shadow-none rounded-r-2xl border-l-0 overflow-y-auto pt-6 px-4 pb-4 h-full">
+    <div className="hidden md:flex flex-col fixed inset-y-0 left-4 z-50 py-4 w-[110px]">
+      <div className="flex flex-col items-center flex-grow glass-card rounded-[30px] shadow-sm overflow-y-auto py-8 px-2 h-full bg-[#3B5B68] border-[#4A6672] dark:bg-slate-900/80">
+
         {/* Logo */}
-        <div className="flex items-center gap-3 px-2 mb-10">
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
-            <BarChart3 className="h-6 w-6 text-white" />
+        <div className="flex flex-col items-center gap-2 mb-10">
+          <div className="h-12 w-12 rounded-full bg-white flex items-center justify-center shadow-md">
+            <BarChart3 className="h-6 w-6 text-[#1E5769]" />
           </div>
-          <span className="text-2xl font-bold text-gradient tracking-tight">OmniSales</span>
         </div>
 
-        <nav className="flex-1 space-y-1.5">
+        <nav className="flex-1 space-y-2 w-full px-2 flex flex-col items-center">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -31,30 +30,23 @@ export function Sidebar() {
                 key={item.name}
                 to={item.href}
                 end={item.href === "/"}
+                title={item.name}
                 className={({ isActive }) =>
-                  `group flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-300 ${
-                    isActive
-                      ? "bg-white/10 dark:bg-white/5 text-indigo-600 dark:text-indigo-400 shadow-sm border border-white/20 dark:border-white/10"
-                      : "text-slate-600 dark:text-slate-400 hover:bg-white/5 hover:text-slate-900 dark:hover:text-slate-100"
+                  `group flex flex-col justify-center items-center rounded-2xl w-full py-3 text-[10px] font-medium transition-all duration-300 ${isActive
+                    ? "bg-white text-[#1E5769] shadow-sm transform scale-105"
+                    : "text-[#A8C2CC] hover:bg-white/10 hover:text-white"
                   }`
                 }
               >
                 {({ isActive }) => (
-                  <>
-                    <Icon className={`h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400"}`} />
-                    {item.name}
-                    {item.href === "/insights" && (
-                      <span className="ml-auto text-[10px] bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 rounded-full px-1.5 py-0.5 font-semibold">AI</span>
-                    )}
-                  </>
+                  <Icon className={`h-6 w-6 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-[#1E5769]" : "text-[#A8C2CC]"}`} />
                 )}
               </NavLink>
             );
           })}
         </nav>
 
-        {/* User Profile / Settings */}
-        
+
       </div>
     </div>
   );

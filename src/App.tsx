@@ -48,9 +48,9 @@ function AppLayout() {
     <CurrencyProvider>
       <ScrollProgress />
       <BackgroundMesh />
-      <div className="flex bg-transparent min-h-screen transition-colors duration-300">
+      <div className="flex bg-transparent min-h-screen transition-colors duration-300 relative">
         <Sidebar />
-        <div className="flex-1 md:ml-64 lg:ml-72 flex flex-col min-h-screen">
+        <div className="flex-1 md:ml-[142px] mr-2 sm:mr-6 flex flex-col min-h-screen">
           <Header />
           <main className="flex-1 pb-10">
             <AnimatedRoutes />
