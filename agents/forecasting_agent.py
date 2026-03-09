@@ -13,6 +13,10 @@ import sys
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 
+# Fix Windows terminal encoding for emoji output
+if sys.stdout.encoding != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 try:
     import pandas as pd
     import numpy as np
