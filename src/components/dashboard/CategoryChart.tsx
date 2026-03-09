@@ -4,7 +4,16 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import type { CategorySlice } from "@/lib/api";
 
-const COLORS = ["#4f46e5", "#8b5cf6", "#ec4899", "#06b6d4", "#f59e0b"];
+const COLORS = [
+  "#4f46e5", // Indigo
+  "#8b5cf6", // Violet
+  "#ec4899", // Pink
+  "#06b6d4", // Cyan
+  "#f59e0b", // Amber
+  "#10b981", // Emerald
+  "#f43f5e", // Rose
+  "#3b82f6", // Blue
+];
 
 interface CategoryChartProps {
   data: CategorySlice[];
@@ -34,8 +43,8 @@ export function CategoryChart({ data, loading }: CategoryChartProps) {
                 <PieChart>
                   <Pie
                     data={data}
-                    cx="50%"
-                    cy="45%"
+                    cx="40%"
+                    cy="50%"
                     innerRadius={70}
                     outerRadius={100}
                     paddingAngle={5}
@@ -51,7 +60,13 @@ export function CategoryChart({ data, loading }: CategoryChartProps) {
                     contentStyle={{ backgroundColor: "var(--background)", borderRadius: "12px", border: "1px solid var(--border)", color: "var(--foreground)" }}
                     formatter={(value: number) => [`${value}%`, "Share"]}
                   />
-                  <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ paddingTop: "20px", fontSize: "13px" }} />
+                  <Legend 
+                    layout="vertical" 
+                    verticalAlign="middle" 
+                    align="right" 
+                    iconType="circle" 
+                    wrapperStyle={{ fontSize: "13px", right: 0, lineHeight: "24px" }} 
+                  />
                 </PieChart>
               </ResponsiveContainer>
             )}
