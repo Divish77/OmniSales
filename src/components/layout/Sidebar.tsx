@@ -53,17 +53,21 @@ export function Sidebar() {
           })}
         </nav>
 
-        {/* User Profile */}
+        {/* User Profile / Settings */}
         <div className="mt-auto pt-6 border-t border-slate-200/20 dark:border-slate-800/20">
-          <div className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300">
-            <div className="h-9 w-9 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center border border-indigo-200/50">
-              <User className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-            </div>
-            <div className="flex flex-col overflow-hidden">
-              <span className="text-sm font-semibold truncate">Divish Admin</span>
-              <span className="text-xs text-slate-500 truncate">omnisales.app</span>
-            </div>
-          </div>
+          <NavLink
+            to="/settings"
+            className={({ isActive }) =>
+              `flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-all duration-300 ${
+                isActive
+                  ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400"
+                  : "text-slate-600 dark:text-slate-400 hover:bg-white/5 hover:text-slate-900 dark:hover:text-slate-100"
+              }`
+            }
+          >
+            <Settings className="h-5 w-5" />
+            Settings
+          </NavLink>
         </div>
       </div>
     </div>
