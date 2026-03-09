@@ -25,12 +25,18 @@ export function ForecastsPage() {
       map.set(f.forecast_month, row);
       return map;
     }, new Map<string, Record<string, number>>()).values()
-  ).sort((a, b) => a.month.localeCompare(b.month));  // sort chronologically
+  ).sort((a, b) => {
+    // Sort numerically by year then month — works regardless of string format
+    const toNum = (s: string) => { const p = s.split("-"); return parseInt(p[0]) * 100 + parseInt(p[1]); };
+    return toNum(a.month) - toNum(b.month);
+  });
 
-  // Sort forecasts table rows by date then category
-  const sortedForecasts = [...forecasts].sort((a, b) =>
-    a.forecast_month.localeCompare(b.forecast_month) || a.category.localeCompare(b.category)
-  );
+  // Sort forecasts table rows by year/month numerically, then category
+  const sortedForecasts = [...forecasts].sort((a, b) => {
+    const toNum = (s: string) => { const p = s.split("-"); return parseInt(p[0]) * 100 + parseInt(p[1]); };
+    return toNum(a.forecast_month) - toNum(b.forecast_month) || a.category.localeCompare(b.category);
+  });
+
 
   const COLORS = ["#4f46e5", "#8b5cf6", "#ec4899", "#06b6d4", "#f59e0b", "#10b981"];
 
