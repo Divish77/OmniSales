@@ -23,12 +23,12 @@ export function RevenueChart({ data, loading }: RevenueChartProps) {
     >
       <Card className="glass-card">
         <CardHeader>
-          <CardTitle className="text-sm xs:text-base font-semibold text-slate-800 dark:text-slate-100">
+          <CardTitle className="text-base font-semibold text-slate-800 dark:text-slate-100">
             Monthly Sales Growth
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[160px] xs:h-[200px] sm:h-[240px] lg:h-[280px] w-full flex items-center justify-center">
+          <div className="h-[200px] sm:h-[240px] lg:h-[280px] w-full flex items-center justify-center">
             {loading ? (
               <Loader2 className="h-8 w-8 animate-spin text-indigo-500" />
             ) : (

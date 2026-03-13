@@ -1,187 +1,157 @@
-import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { 
+  Plus, Loader2, CheckCircle2, AlertCircle, ShoppingCart, 
+  Globe, Store, Trash2, Tag, MapPin 
+} from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import { Store, Globe, Plus, CheckCircle2, AlertCircle, Loader2, Trash2 } from "lucide-react";
+import { useCurrency } from "@/context/CurrencyContext";
 
-type Channel = "store" | "online";
+const CATEGORIES = ["Electronics", "Fashion", "Home & Garden", "Sports", "Beauty", "Automotive"];
+const CITIES = ["Delhi", "Mumbai", "Bangalore", "Hyderabad", "Chennai", "Kolkata", "Pune", "Ahmedabad"];
 
-const CATEGORIES = ["Electronics", "Furniture", "Sports", "Books", "Health", "Beauty", "Home", "Office", "Fashion", "Food"];
-
-const CITIES = ["Mumbai", "Delhi", "Bangalore", "Chennai", "Hyderabad", "Kolkata", "Pune", "Ahmedabad", "Jaipur", "Surat", "Other"];
-
-const emptyForm = {
-  date: new Date().toISOString().split("T")[0],
-  store_name: "",
-  product_name: "",
-  category: "",
-  quantity: "",
-  price: "",
-  location: "",
-};
-
-type RecentEntry = {
+interface SaleEntry {
   id: string;
-  date: string;
   product_name: string;
   category: string;
   quantity: number;
   price: number;
-  channel: Channel;
-};
+  date: string;
+  channel: 'online' | 'store';
+}
 
 export function AddSalePage() {
-  const [channel, setChannel] = useState<Channel>("store");
-  const [form, setForm] = useState(emptyForm);
+  const [form, setForm] = useState({
+    product_name: "",
+    category: "",
+    quantity: "",
+    price: "",
+    location: "",
+  });
+  const [channel, setChannel] = useState<'online' | 'store'>('online');
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
-  const [recent, setRecent] = useState<RecentEntry[]>([]);
+  const [recent, setRecent] = useState<SaleEntry[]>([]);
   const [loadingRecent, setLoadingRecent] = useState(true);
+  const { currency, format } = useCurrency();
 
-  const loadRecent = async () => {
-    setLoadingRecent(true);
-    const [storeRes, onlineRes] = await Promise.all([
-      supabase.from("store_sales").select("id,date,product_name,category,quantity,price").order("created_at", { ascending: false }).limit(5),
-      supabase.from("online_sales").select("id,date,product_name,category,quantity,price").order("created_at", { ascending: false }).limit(5),
-    ]);
-    const storeSales = (storeRes.data ?? []).map(r => ({ ...r, channel: "store" as Channel }));
-    const onlineSales = (onlineRes.data ?? []).map(r => ({ ...r, channel: "online" as Channel }));
-    const merged = [...storeSales, ...onlineSales]
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 8);
-    setRecent(merged);
-    setLoadingRecent(false);
+  useEffect(() => {
+    fetchRecent();
+  }, []);
+
+  const fetchRecent = async () => {
+    try {
+      const { data: online, error: e1 } = await supabase.from('sales_data').select('*').order('sale_date', { ascending: false }).limit(5);
+      const { data: store, error: e2 } = await supabase.from('store_sales').select('*').order('sale_date', { ascending: false }).limit(5);
+      
+      if (e1 || e2) throw e1 || e2;
+
+      const combined: SaleEntry[] = [
+        ...(online || []).map(s => ({ ...s, id: s.sale_id, channel: 'online', date: s.sale_date })),
+        ...(store || []).map(s => ({ ...s, id: s.sale_id, channel: 'store', date: s.sale_date }))
+      ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 10) as SaleEntry[];
+
+      setRecent(combined);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingRecent(false);
+    }
   };
 
-  useEffect(() => { loadRecent(); }, []);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.store_name || !form.product_name || !form.category || !form.quantity || !form.price || !form.location) {
-      setErrorMsg("Please fill in all fields, including Store Name.");
-      setStatus("error");
-      return;
-    }
-    if (Number(form.quantity) <= 0 || Number(form.price) <= 0) {
-      setErrorMsg("Quantity and price must be greater than zero.");
+    if (Object.values(form).some(v => !v)) {
+      setErrorMsg("Please fill in all fields.");
       setStatus("error");
       return;
     }
 
     setStatus("loading");
-    const table = channel === "store" ? "store_sales" : "online_sales";
-    const locField = channel === "store" ? "city" : "location";
-    const payload = {
-      date: form.date,
-      store_name: form.store_name,
-      product_name: form.product_name,
-      category: form.category,
-      quantity: parseInt(form.quantity),
-      price: parseFloat(form.price),
-      [locField]: form.location,
-    };
+    try {
+      const payload = {
+        product_name: form.product_name,
+        category: form.category,
+        quantity: parseInt(form.quantity),
+        price: parseFloat(form.price),
+        sale_date: new Date().toISOString().split('T')[0],
+      };
 
-    const { error } = await supabase.from(table).insert(payload);
-    if (error) {
-      setErrorMsg(error.message);
+      const table = channel === "online" ? "sales_data" : "store_sales";
+      const locationKey = channel === "online" ? "region" : "city";
+      
+      const { error } = await supabase.from(table).insert([{ ...payload, [locationKey]: form.location }]);
+      
+      if (error) throw error;
+
+      setStatus("success");
+      setForm({ product_name: "", category: "", quantity: "", price: "", location: "" });
+      fetchRecent();
+      setTimeout(() => setStatus("idle"), 3000);
+    } catch (err: any) {
+      setErrorMsg(err.message || "Failed to record sale.");
       setStatus("error");
-      setTimeout(() => setStatus("idle"), 4000);
-      return;
     }
-
-    setStatus("success");
-    setForm({ ...emptyForm, date: form.date, category: form.category, location: form.location });
-    loadRecent();
-    setTimeout(() => setStatus("idle"), 3000);
   };
 
-  const deleteEntry = async (id: string, ch: Channel) => {
-    const table = ch === "store" ? "store_sales" : "online_sales";
-    await supabase.from(table).delete().eq("id", id);
-    loadRecent();
+  const deleteEntry = async (id: string, ch: 'online' | 'store') => {
+    const table = ch === "online" ? "sales_data" : "store_sales";
+    const { error } = await supabase.from(table).delete().eq('sale_id', id);
+    if (!error) fetchRecent();
   };
 
   return (
-    <div className="flex-1 space-y-8 p-4 sm:p-6 lg:p-8 pt-6">
+    <div className="flex-1 space-y-8 p-4 sm:p-6 lg:p-8 pt-6 max-w-6xl mx-auto">
       <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-        <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Add Sale</h2>
-        <p className="text-slate-500 dark:text-slate-400 mt-1">
-          Record a new sale from your store or online channel. It will appear in your analytics instantly.
-        </p>
+        <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Record New Sale</h2>
+        <p className="text-slate-500 dark:text-slate-400 mt-1">Manually enter a transaction to keep your dashboard and AI models updated with the latest data.</p>
       </motion.div>
 
       <div className="grid gap-8 grid-cols-1 xl:grid-cols-5">
-        {/* Form */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="xl:col-span-3">
-          <Card className="glass-card">
-            <CardHeader>
-              <CardTitle>New Sale Entry</CardTitle>
-              {/* Channel toggle */}
-              <div className="flex gap-2 mt-3">
-                {(["store", "online"] as Channel[]).map(ch => (
-                  <button
-                    key={ch}
-                    type="button"
-                    onClick={() => setChannel(ch)}
-                    className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                      channel === ch
-                        ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/25"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
-                    }`}
-                  >
-                    {ch === "store" ? <Store className="h-4 w-4" /> : <Globe className="h-4 w-4" />}
-                    {ch === "store" ? "Physical Store" : "Online Sale"}
-                  </button>
-                ))}
-              </div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="xl:col-span-3">
+          <Card className="glass-card shadow-lg border-slate-200/60 dark:border-slate-800">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl flex items-center gap-2">
+                <ShoppingCart className="h-5 w-5 text-indigo-500" /> Transaction Details
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Store Name — full width, required */}
-                <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1">
-                    {channel === "store" ? "Store Name" : "Platform / Brand Name"}
-                    <span className="text-red-500 text-base leading-none">*</span>
-                  </label>
-                  <Input
-                    name="store_name"
-                    placeholder={channel === "store" ? "e.g. Divish Electronics — Andheri Branch" : "e.g. Amazon, Flipkart, My Website"}
-                    value={form.store_name}
-                    onChange={handleChange}
-                    className={`bg-white/50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 ${
-                      status === "error" && !form.store_name ? "border-red-400 focus:ring-red-400" : ""
-                    }`}
-                  />
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Channel Toggle */}
+                <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl w-fit">
+                  <button
+                    type="button"
+                    onClick={() => setChannel("online")}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${channel === "online" ? "bg-white dark:bg-slate-700 shadow-sm text-indigo-600" : "text-slate-500 hover:text-slate-700"}`}
+                  >
+                    <Globe className="h-4 w-4" /> Online Store
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setChannel("store")}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${channel === "store" ? "bg-white dark:bg-slate-700 shadow-sm text-purple-600" : "text-slate-500 hover:text-slate-700"}`}
+                  >
+                    <Store className="h-4 w-4" /> Physical Store
+                  </button>
                 </div>
 
-                {/* Date + Product */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Date</label>
-                    <Input
-                      type="date"
-                      name="date"
-                      value={form.date}
-                      onChange={handleChange}
-                      className="bg-white/50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Product Name</label>
-                    <Input
-                      name="product_name"
-                      placeholder="e.g. Nike Running Shoes"
-                      value={form.product_name}
-                      onChange={handleChange}
-                      className="bg-white/50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700"
-                    />
-                  </div>
+                {/* Product Name */}
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Product Name</label>
+                  <Input
+                    name="product_name"
+                    placeholder="e.g. Wireless Headphones Z1"
+                    value={form.product_name}
+                    onChange={handleChange}
+                    className="bg-white/50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-xl h-11"
+                  />
                 </div>
 
                 {/* Category + Location */}
@@ -192,21 +162,21 @@ export function AddSalePage() {
                       name="category"
                       value={form.category}
                       onChange={handleChange}
-                      className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                      className="w-full h-11 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
                     >
                       <option value="">Select category…</option>
                       {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                     </select>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                      {channel === "store" ? "City / Store Location" : "Region / Market"}
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300 uppercase tracking-tight text-[10px] flex items-center gap-1.5">
+                       <MapPin className="h-3 w-3" /> {channel === "store" ? "City / Store Location" : "Region / Market"}
                     </label>
                     <select
                       name="location"
                       value={form.location}
                       onChange={handleChange}
-                      className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                      className="w-full h-11 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
                     >
                       <option value="">Select location…</option>
                       {CITIES.map(c => <option key={c} value={c}>{c}</option>)}
@@ -225,11 +195,11 @@ export function AddSalePage() {
                       placeholder="e.g. 3"
                       value={form.quantity}
                       onChange={handleChange}
-                      className="bg-white/50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700"
+                      className="bg-white/50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-xl h-11"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Price per Unit (USD)</label>
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Price per Unit ({currency.code})</label>
                     <Input
                       type="number"
                       name="price"
@@ -238,17 +208,17 @@ export function AddSalePage() {
                       placeholder="e.g. 49.99"
                       value={form.price}
                       onChange={handleChange}
-                      className="bg-white/50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700"
+                      className="bg-white/50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 rounded-xl h-11"
                     />
                   </div>
                 </div>
 
                 {/* Revenue preview */}
                 {form.quantity && form.price && (
-                  <div className="rounded-xl bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 px-4 py-3 flex items-center justify-between">
-                    <span className="text-sm text-indigo-700 dark:text-indigo-300 font-medium">Total Revenue</span>
-                    <span className="text-lg font-bold text-indigo-700 dark:text-indigo-300">
-                      ${(Number(form.quantity) * Number(form.price)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  <div className="rounded-2xl bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 px-5 py-4 flex items-center justify-between shadow-inner">
+                    <span className="text-sm text-indigo-700 dark:text-indigo-300 font-semibold tracking-wide uppercase text-[11px]">Est. Total Revenue</span>
+                    <span className="text-2xl font-black text-indigo-700 dark:text-indigo-300 tracking-tighter">
+                      {format(Number(form.quantity) * Number(form.price))}
                     </span>
                   </div>
                 )}
@@ -257,14 +227,14 @@ export function AddSalePage() {
                 <AnimatePresence>
                   {status === "success" && (
                     <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                      className="flex items-center gap-3 rounded-xl bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/20 px-4 py-3 text-green-700 dark:text-green-400 text-sm font-medium">
+                      className="flex items-center gap-3 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 px-4 py-3 text-emerald-700 dark:text-emerald-400 text-sm font-semibold">
                       <CheckCircle2 className="h-5 w-5 flex-shrink-0" />
                       Sale recorded successfully! The dashboard will update shortly.
                     </motion.div>
                   )}
                   {status === "error" && (
                     <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                      className="flex items-center gap-3 rounded-xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 px-4 py-3 text-red-700 dark:text-red-400 text-sm">
+                      className="flex items-center gap-3 rounded-2xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 px-4 py-3 text-red-700 dark:text-red-400 text-sm font-medium font-mono lowercase">
                       <AlertCircle className="h-5 w-5 flex-shrink-0" />{errorMsg}
                     </motion.div>
                   )}
@@ -273,12 +243,12 @@ export function AddSalePage() {
                 <Button
                   type="submit"
                   disabled={status === "loading"}
-                  className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl h-11 font-semibold shadow-lg shadow-indigo-500/20 transition-all duration-200"
+                  className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white rounded-2xl h-14 font-black text-sm uppercase tracking-widest shadow-xl shadow-indigo-600/20 transition-all duration-300 active:scale-[0.98]"
                 >
                   {status === "loading" ? (
-                    <><Loader2 className="h-4 w-4 animate-spin mr-2" />Saving…</>
+                    <><Loader2 className="h-5 w-5 animate-spin mr-2" />Processing Transaction…</>
                   ) : (
-                    <><Plus className="h-4 w-4 mr-2" />Record Sale</>
+                    <><Plus className="h-5 w-5 mr-2" />Complete Record Sale</>
                   )}
                 </Button>
               </form>
@@ -288,37 +258,40 @@ export function AddSalePage() {
 
         {/* Recent entries */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="xl:col-span-2">
-          <Card className="glass-card h-full">
-            <CardHeader><CardTitle>Recent Entries</CardTitle></CardHeader>
+          <Card className="glass-card h-full shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+               <CardTitle className="text-lg font-bold">Recent Ledger</CardTitle>
+               <div className="bg-slate-100 p-1.5 rounded-lg"><Tag className="w-4 h-4 text-slate-400" /></div>
+            </CardHeader>
             <CardContent>
               {loadingRecent
-                ? <div className="flex justify-center py-8"><Loader2 className="h-6 w-6 animate-spin text-indigo-400" /></div>
+                ? <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-indigo-400" /></div>
                 : recent.length === 0
-                  ? <p className="text-center text-slate-400 text-sm py-8">No entries yet. Add your first sale!</p>
+                  ? <p className="text-center text-slate-400 text-sm py-12 font-medium">No sales recorded yet.</p>
                   : (
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       {recent.map(r => (
                         <div key={`${r.channel}-${r.id}`}
-                          className="flex items-start gap-3 rounded-xl px-3 py-2.5 bg-white/40 dark:bg-white/5 border border-slate-100 dark:border-slate-800 hover:shadow-sm transition-all group">
-                          <div className={`mt-0.5 h-7 w-7 flex-shrink-0 rounded-lg flex items-center justify-center ${r.channel === "online" ? "bg-indigo-50 dark:bg-indigo-500/10" : "bg-purple-50 dark:bg-purple-500/10"}`}>
+                          className="flex items-start gap-4 rounded-2xl px-4 py-4 bg-white/60 dark:bg-white/5 border border-slate-100 dark:border-slate-800 hover:shadow-md hover:border-indigo-100 dark:hover:border-indigo-900 transition-all group">
+                          <div className={`mt-0.5 h-11 w-11 flex-shrink-0 rounded-xl flex items-center justify-center shadow-sm ${r.channel === "online" ? "bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-50" : "bg-purple-50 dark:bg-purple-500/10 border border-purple-50"}`}>
                             {r.channel === "online"
-                              ? <Globe className="h-3.5 w-3.5 text-indigo-500" />
-                              : <Store className="h-3.5 w-3.5 text-purple-500" />}
+                              ? <Globe className="h-5 w-5 text-indigo-500" />
+                              : <Store className="h-5 w-5 text-purple-500" />}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">{r.product_name}</p>
-                            <p className="text-xs text-slate-400">{r.category} · {r.date} · ×{r.quantity}</p>
+                            <p className="text-sm font-bold text-slate-800 dark:text-slate-200 truncate">{r.product_name}</p>
+                            <p className="text-[11px] text-slate-400 font-semibold uppercase tracking-tight">{r.category} · {r.date} · {r.quantity} units</p>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 whitespace-nowrap">
-                              ${(r.quantity * r.price).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                          <div className="flex items-center gap-3">
+                            <span className="text-base font-black text-indigo-600 dark:text-indigo-400 whitespace-nowrap tracking-tighter">
+                              {format(r.quantity * r.price, true)}
                             </span>
                             <button
                               onClick={() => deleteEntry(r.id, r.channel)}
-                              className="opacity-0 group-hover:opacity-100 text-slate-300 hover:text-red-500 transition-all"
+                              className="opacity-0 group-hover:opacity-100 h-8 w-8 rounded-full border border-slate-100 flex items-center justify-center text-slate-300 hover:text-red-500 hover:bg-red-50 hover:border-red-100 transition-all"
                               title="Delete entry"
                             >
-                              <Trash2 className="h-3.5 w-3.5" />
+                              <Trash2 className="h-4 w-4" />
                             </button>
                           </div>
                         </div>

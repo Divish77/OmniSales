@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { ChevronDown, UserCircle, LogOut } from "lucide-react";
+import { useLocation } from "react-router-dom";
+import { ChevronDown, UserCircle, LogOut, LayoutDashboard } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { MobileMenu } from "./MobileMenu";
 import { useCurrency, CURRENCIES, type CurrencyInfo } from "@/context/CurrencyContext";
 import { supabase } from "@/lib/supabase";
@@ -23,14 +25,14 @@ function CurrencySelector() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-center gap-1 xs:gap-1.5 rounded-lg xs:rounded-xl px-2 xs:px-3 py-1.5 xs:py-2 text-xs xs:text-sm font-semibold min-h-[44px] min-w-[44px]
+        className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-semibold
           bg-white/40 dark:bg-slate-800/40 border border-white/30 dark:border-slate-700/40
           backdrop-blur-sm text-slate-700 dark:text-slate-200
           hover:bg-white/60 dark:hover:bg-slate-700/60 transition-all duration-200 shadow-sm"
       >
-        <span className="text-sm xs:text-base leading-none">{currency.symbol}</span>
-        <span className="hidden xs:inline">{currency.code}</span>
-        <ChevronDown className={`h-3 xs:h-3.5 w-3 xs:w-3.5 text-slate-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+        <span className="text-base leading-none">{currency.symbol}</span>
+        <span className="hidden sm:inline">{currency.code}</span>
+        <ChevronDown className={`h-3.5 w-3.5 text-slate-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open && (
@@ -126,20 +128,73 @@ function ProfileDropdown() {
   );
 }
 
+function PageIndicator() {
+  const location = useLocation();
+  const isDashboard = location.pathname === "/";
+
+  return (
+    <AnimatePresence>
+      {isDashboard && (
+        <motion.div
+          initial={{ opacity: 0, y: -20, scale: 0.8 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -20, scale: 0.8 }}
+          transition={{ 
+            type: "spring", 
+            stiffness: 400, 
+            damping: 25,
+            mass: 0.8
+          }}
+          className="flex items-center gap-2.5 rounded-2xl px-4 py-2 
+            bg-white/5 dark:bg-slate-800/40 border border-white/20 dark:border-white/10
+            backdrop-blur-xl shadow-xl shadow-indigo-500/5 group group"
+        >
+          <div className="relative">
+            <motion.div
+              animate={{ 
+                scale: [1, 1.2, 1],
+                opacity: [0.5, 0.8, 0.5]
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="absolute inset-0 bg-indigo-500/20 blur-md rounded-full"
+            />
+            <LayoutDashboard className="h-4 w-4 text-indigo-400 relative z-10" />
+          </div>
+          <span className="text-xs font-black uppercase tracking-[0.2em] text-white/90 drop-shadow-sm">
+            Dashboard
+          </span>
+          <div className="h-1.5 w-1.5 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.8)] animate-pulse" />
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 flex h-[60px] xs:h-[70px] sm:h-[86px] lg:h-[100px] items-center justify-between px-2.5 xs:px-3 sm:px-6
+    <header className="sticky top-0 z-40 flex h-[70px] sm:h-[86px] lg:h-[100px] items-center justify-between px-3 sm:px-6
       bg-transparent transition-all duration-300">
 
-      <div className="flex items-center gap-2 xs:gap-3 sm:gap-8">
+      <div className="flex items-center gap-8">
         <MobileMenu />
       </div>
 
-      <div className="flex items-center gap-2 xs:gap-4 sm:gap-6">
+      <div className="hidden md:block absolute left-1/2 -translate-x-1/2">
+        <PageIndicator />
+      </div>
+
+      <div className="flex items-center gap-6">
+
         {/* Currency Selector */}
         <CurrencySelector />
 
-        <div className="flex items-center gap-2 xs:gap-2">
+        <div className="flex items-center gap-2">
+
+
           <ProfileDropdown />
         </div>
       </div>

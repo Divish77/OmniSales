@@ -12,12 +12,12 @@ export function ChannelRevenueCard({ data, loading }: ChannelRevenueCardProps) {
   const { format } = useCurrency();
 
   return (
-    <Card className="glass-card border-0 bg-white relative overflow-hidden h-full min-h-[260px] xs:min-h-[270px] sm:min-h-[280px] flex flex-col">
-      <CardHeader className="pb-1.5 xs:pb-2 z-10 relative shrink-0">
-        <CardTitle className="text-sm xs:text-base font-semibold text-slate-800">Channel Performance</CardTitle>
+    <Card className="glass-card border-0 bg-white relative overflow-hidden h-full min-h-[280px] flex flex-col">
+      <CardHeader className="pb-2 z-10 relative shrink-0">
+        <CardTitle className="text-base font-semibold text-slate-800">Channel Performance</CardTitle>
       </CardHeader>
       
-      <CardContent className="flex-1 relative flex flex-col p-2.5 xs:p-3 pt-0 justify-center z-10 w-full min-h-0">
+      <CardContent className="flex-1 relative flex flex-col p-3 pt-0 justify-center z-10 w-full min-h-0">
         {loading ? (
           <div className="flex-1 flex items-center justify-center min-h-[150px]">
             <Loader2 className="h-8 w-8 animate-spin text-indigo-500" />

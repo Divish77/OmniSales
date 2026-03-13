@@ -10,6 +10,7 @@ import { CustomerBehaviorPage } from "@/app/CustomerBehaviorPage";
 import { ForecastsPage } from "@/app/ForecastsPage";
 import { AIInsightsPage } from "@/app/AIInsightsPage";
 import { AddSalePage } from "@/app/AddSalePage";
+import { LandingPage } from "@/app/LandingPage";
 import { supabase } from "@/lib/supabase";
 import { CurrencyProvider } from "@/context/CurrencyContext";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
@@ -30,13 +31,14 @@ function AnimatedRoutes() {
         className="flex-1"
       >
         <Routes location={location}>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/sales" element={<SalesAnalyticsPage />} />
           <Route path="/behavior" element={<CustomerBehaviorPage />} />
           <Route path="/forecasts" element={<ForecastsPage />} />
           <Route path="/insights" element={<AIInsightsPage />} />
           <Route path="/add-sale" element={<AddSalePage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </motion.div>
     </AnimatePresence>
@@ -85,11 +87,22 @@ function App() {
     );
   }
 
-  if (!session) return <Login onLogin={() => {}} />;
-
   return (
     <BrowserRouter>
-      <AppLayout />
+      <Routes>
+        <Route 
+          path="/" 
+          element={!session ? <LandingPage /> : <Navigate to="/dashboard" replace />} 
+        />
+        <Route 
+          path="/login" 
+          element={!session ? <Login onLogin={() => {}} /> : <Navigate to="/dashboard" replace />} 
+        />
+        <Route
+          path="/*"
+          element={session ? <AppLayout /> : <Navigate to="/login" replace />}
+        />
+      </Routes>
     </BrowserRouter>
   );
 }
