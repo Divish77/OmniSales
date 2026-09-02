@@ -105,7 +105,7 @@ VERCEL_PROJECT_ID: prj_NZmuUViv0d0rudnHtkazAKTlf8xg
 
 ```yaml
 VITE_SUPABASE_URL: https://bnmfhmsidqfqhkvcaqpp.supabase.co
-VITE_SUPABASE_ANON_KEY: sb_publishable_8WBaxLJ3Uz0r2Q6w7JiuUA_ZsrpqyQg
+VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJubWZobXNpZHFmcWhrdmNhcXBwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NzQyMzMsImV4cCI6MjA4ODQ1MDIzM30.S9y-jDPaW0QNneKpCxNh3ce4terJQ54njvGms7i52LY
 ```
 
 ---

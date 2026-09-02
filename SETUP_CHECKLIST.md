@@ -9,7 +9,7 @@ Your Supabase project has been configured. Follow this checklist to complete the
 ### 1.1 Environment Variables (Already Done ✓)
 - [x] `.env` file created with Supabase credentials
 - [x] `VITE_SUPABASE_URL=https://bnmfhmsidqfqhkvcaqpp.supabase.co`
-- [x] `VITE_SUPABASE_ANON_KEY=sb_publishable_8WBaxLJ3Uz0r2Q6w7JiuUA_ZsrpqyQg`
+- [x] `VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJubWZobXNpZHFmcWhrdmNhcXBwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NzQyMzMsImV4cCI6MjA4ODQ1MDIzM30.S9y-jDPaW0QNneKpCxNh3ce4terJQ54njvGms7i52LY`
 
 ### 1.2 Verify Vite Environment
 ```bash
@@ -100,7 +100,7 @@ Add these for **All environments** (Production, Preview, Development):
 | Variable | Value |
 |----------|-------|
 | `VITE_SUPABASE_URL` | `https://bnmfhmsidqfqhkvcaqpp.supabase.co` |
-| `VITE_SUPABASE_ANON_KEY` | `sb_publishable_8WBaxLJ3Uz0r2Q6w7JiuUA_ZsrpqyQg` |
+| `VITE_SUPABASE_ANON_KEY` | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJubWZobXNpZHFmcWhrdmNhcXBwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NzQyMzMsImV4cCI6MjA4ODQ1MDIzM30.S9y-jDPaW0QNneKpCxNh3ce4terJQ54njvGms7i52LY` |
 
 **Important:** Select **All** environments for each variable!
 
