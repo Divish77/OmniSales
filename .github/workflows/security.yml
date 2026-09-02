@@ -1,0 +1,51 @@
+name: Security & Dependencies
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+  push:
+    branches:
+      - main
+  pull_request:
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Run Snyk security scan
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        continue-on-error: true
+
+  dependencies:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check outdated dependencies
+        run: npm outdated
+        continue-on-error: true
+
+      - name: Validate dependencies
+        run: npm ls
+        continue-on-error: true

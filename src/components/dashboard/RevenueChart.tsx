@@ -19,7 +19,7 @@ export function RevenueChart({ data, loading }: RevenueChartProps) {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, delay: 0.2 }}
-      className="col-span-1 lg:col-span-3"
+      className="col-span-1 lg:col-span-3 min-w-0"
     >
       <Card className="glass-card">
         <CardHeader>

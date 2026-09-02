@@ -52,7 +52,7 @@ export function LandingPage() {
           <div className="flex items-center gap-4 sm:gap-6">
             <Link to="/login" className="text-sm font-semibold text-zinc-300 hover:text-white transition-colors">Log in</Link>
             <Button 
-              onClick={() => navigate('/login')} 
+              onClick={() => navigate('/login?mode=signup')} 
               className="rounded-full bg-[#BFFF00] text-black hover:bg-[#a3d900] px-4 sm:px-6 py-5 sm:py-6 font-bold tracking-wide transition-all duration-300 hover:shadow-[0_0_20px_rgba(191,255,0,0.3)] text-xs sm:text-sm"
             >
               Sign up
@@ -273,7 +273,7 @@ export function LandingPage() {
                 </motion.p>
                 <motion.div variants={fadeIn}>
                    <Button 
-                      onClick={() => navigate('/login')}
+                      onClick={() => navigate('/login?mode=signup')}
                       className="w-full bg-[#BFFF00] text-black hover:bg-[#a3d900] py-6 font-bold rounded-2xl flex items-center justify-center gap-2 group/btn"
                     >
                       Sign up now
@@ -330,7 +330,7 @@ export function LandingPage() {
                    <h3 className="text-3xl sm:text-4xl font-black text-black uppercase tracking-tight mb-2">Ready to accelerate?</h3>
                    <p className="text-black/70 font-bold text-lg">Join top performers relying on OmniSales architecture.</p>
                  </div>
-                 <Button onClick={() => navigate('/login')} className="relative z-10 rounded-full h-16 w-16 bg-black flex items-center justify-center hover:scale-110 transition-transform duration-300">
+                 <Button onClick={() => navigate('/login?mode=signup')} className="relative z-10 rounded-full h-16 w-16 bg-black flex items-center justify-center hover:scale-110 transition-transform duration-300">
                    <ArrowRight className="w-6 h-6 text-[#BFFF00]" />
                  </Button>
               </motion.div>
@@ -445,7 +445,7 @@ export function LandingPage() {
                   <p className="text-zinc-400 text-lg leading-relaxed mb-6">
                     A beautiful, hyper-responsive Command Center visualizes everything. Rather than staring at complex spreadsheets, interact directly with geographical demand maps, category performance donuts, and top-product leaderboards designed specifically for operators.
                   </p>
-                  <Button onClick={() => navigate('/login')} className="rounded-full bg-[#6339F9] text-white hover:bg-[#502cd4] px-8 py-6 font-bold tracking-wide mt-4">
+                  <Button onClick={() => navigate('/login?mode=signup')} className="rounded-full bg-[#6339F9] text-white hover:bg-[#502cd4] px-8 py-6 font-bold tracking-wide mt-4">
                     Get Started Now
                   </Button>
                 </motion.div>

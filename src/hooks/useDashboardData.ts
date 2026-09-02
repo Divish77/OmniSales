@@ -3,36 +3,39 @@ import { supabase } from "@/lib/supabase";
 import {
   fetchTotalRevenue,
   fetchMonthlyRevenue,
-  fetchTopProducts,
   fetchCategoryDistribution,
-  fetchRegionalDemand,
   fetchChannelRevenue,
+  fetchTopProducts,
   type MonthlyRevenue,
-  type TopProduct,
   type CategorySlice,
-  type RegionalDemand,
   type ChannelRevenue,
+  type TopProduct,
 } from "@/lib/api";
 
 export type DashboardData = {
   totalRevenue: number;
   monthlyRevenue: MonthlyRevenue[];
-  topProducts: TopProduct[];
   categories: CategorySlice[];
-  regionalDemand: RegionalDemand[];
   channelRevenue: ChannelRevenue[];
+  topProducts: TopProduct[];
   totalOrders: number;
   loading: boolean;
   error: string | null;
 };
 
-export function useDashboardData(): DashboardData {
+export function useDashboardData(
+  country?: string,
+  region?: string,
+  product?: string,
+  category?: string,
+  startDate?: string,
+  endDate?: string,
+): DashboardData {
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [monthlyRevenue, setMonthlyRevenue] = useState<MonthlyRevenue[]>([]);
-  const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
   const [categories, setCategories] = useState<CategorySlice[]>([]);
-  const [regionalDemand, setRegionalDemand] = useState<RegionalDemand[]>([]);
   const [channelRevenue, setChannelRevenue] = useState<ChannelRevenue[]>([]);
+  const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,26 +43,24 @@ export function useDashboardData(): DashboardData {
     try {
       setLoading(true);
       setError(null);
-      const [rev, monthly, products, cats, regional, channels] = await Promise.all([
-        fetchTotalRevenue(),
-        fetchMonthlyRevenue(),
-        fetchTopProducts(),
-        fetchCategoryDistribution(),
-        fetchRegionalDemand(),
-        fetchChannelRevenue()
+      const [rev, monthly, cats, channels, products] = await Promise.all([
+        fetchTotalRevenue(country, region, product, category, startDate, endDate),
+        fetchMonthlyRevenue(country, region, product, category, startDate, endDate),
+        fetchCategoryDistribution(country, region, product, category, startDate, endDate),
+        fetchChannelRevenue(country, region, product, category, undefined, startDate, endDate),
+        fetchTopProducts(country, region, product, category, startDate, endDate),
       ]);
       setTotalRevenue(rev);
       setMonthlyRevenue(monthly);
-      setTopProducts(products);
       setCategories(cats);
-      setRegionalDemand(regional);
       setChannelRevenue(channels);
+      setTopProducts(products);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [country, region, product, category, startDate, endDate]);
 
   useEffect(() => {
     load();
@@ -71,7 +72,7 @@ export function useDashboardData(): DashboardData {
     return () => { supabase.removeChannel(channel); };
   }, [load]);
 
-  const totalOrders = channelRevenue.reduce((sum, channel) => sum + channel.orders, 0);
+  const totalOrders = channelRevenue.reduce((sum, ch) => sum + (Number(ch.orders) || 0), 0);
 
-  return { totalRevenue, monthlyRevenue, topProducts, categories, regionalDemand, channelRevenue, totalOrders, loading, error };
+  return { totalRevenue, monthlyRevenue, categories, channelRevenue, topProducts, totalOrders, loading, error };
 }

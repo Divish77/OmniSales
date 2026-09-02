@@ -17,7 +17,6 @@ import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { BackgroundMesh } from "@/components/ui/BackgroundMesh";
 import type { Session } from "@supabase/supabase-js";
 
-
 function AnimatedRoutes() {
   const location = useLocation();
   return (
@@ -47,22 +46,23 @@ function AnimatedRoutes() {
 
 function AppLayout() {
   return (
-    <CurrencyProvider>
+    <>
       <ScrollProgress />
       <BackgroundMesh />
-      <div className="flex bg-transparent min-h-screen transition-colors duration-300 relative">
+      <div className="flex w-full max-w-full bg-transparent min-h-screen transition-colors duration-300 relative overflow-x-hidden">
         <Sidebar />
-        <div className="flex-1 md:ml-[142px] mr-2 sm:mr-6 flex flex-col min-h-screen">
+        <div className="flex-1 w-full md:w-auto md:ml-[142px] px-3 sm:px-6 flex flex-col min-h-screen">
           <Header />
-          <main className="flex-1 pb-10">
+          <main className="flex-1 w-full max-w-full pb-10">
             <AnimatedRoutes />
           </main>
         </div>
       </div>
-    </CurrencyProvider>
+    </>
   );
 }
 
+import { FilterProvider } from "@/context/FilterContext";
 
 function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -88,22 +88,26 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route 
-          path="/" 
-          element={!session ? <LandingPage /> : <Navigate to="/dashboard" replace />} 
-        />
-        <Route 
-          path="/login" 
-          element={!session ? <Login onLogin={() => {}} /> : <Navigate to="/dashboard" replace />} 
-        />
-        <Route
-          path="/*"
-          element={session ? <AppLayout /> : <Navigate to="/login" replace />}
-        />
-      </Routes>
-    </BrowserRouter>
+    <CurrencyProvider>
+      <FilterProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route 
+              path="/" 
+              element={!session ? <LandingPage /> : <Navigate to="/dashboard" replace />} 
+            />
+            <Route 
+              path="/login" 
+              element={!session ? <Login onLogin={() => {}} /> : <Navigate to="/dashboard" replace />} 
+            />
+            <Route 
+              path="/*" 
+              element={session ? <AppLayout /> : <Navigate to="/" replace />} 
+            />
+          </Routes>
+        </BrowserRouter>
+      </FilterProvider>
+    </CurrencyProvider>
   );
 }
 

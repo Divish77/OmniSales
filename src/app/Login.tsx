@@ -17,7 +17,13 @@ export function Login({ onLogin }: AuthProps) {
   const [oauthLoading, setOauthLoading] = useState<"github" | null>(null);
   
   // Modes: "login", "signup", "reset_phone", "reset_verify"
-  const [mode, setMode] = useState<"login" | "signup" | "reset_phone" | "reset_verify">("login");
+  const [mode, setMode] = useState<"login" | "signup" | "reset_phone" | "reset_verify">(() => {
+    // Check URL parameters for initial mode
+    const params = new URLSearchParams(window.location.search);
+    const m = params.get("mode");
+    if (m === "signup") return "signup";
+    return "login";
+  });
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
