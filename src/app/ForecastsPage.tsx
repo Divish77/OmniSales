@@ -39,7 +39,7 @@ export function ForecastsPage() {
     setLoading(true);
     setCurrentPage(1); // Reset to page 1 on filter change
     Promise.all([
-      fetchForecasts(selectedCountry, selectedState, selectedProduct, selectedCategory, selectedMonth, startDate, endDate),
+      fetchForecasts(selectedCountry, selectedState, selectedProduct, selectedCategory, selectedMonth),
       fetchMonthlyRevenue(selectedCountry, selectedState, selectedProduct, selectedCategory, startDate, endDate)
     ])
       .then(([forecastData, actualData]) => {

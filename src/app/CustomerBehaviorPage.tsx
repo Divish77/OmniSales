@@ -144,7 +144,7 @@ export function CustomerBehaviorPage() {
       fetchChannelTrend(selectedCountry, selectedState, selectedProduct, selectedCategory, selectedMonth, startDate, endDate),
       fetchLoyaltySignals(selectedCountry, selectedState, selectedCategory, selectedMonth, startDate, endDate),
       fetchBasketAnalysis(selectedCountry, selectedState, selectedCategory, selectedMonth, startDate, endDate),
-      fetchCustomerBehavior(selectedCountry, selectedState, selectedCategory, selectedProduct, selectedMonth, startDate, endDate),
+      fetchCustomerBehavior(selectedCountry, selectedState, selectedCategory, selectedProduct, selectedMonth),
     ])
       .then(([ck, tr, ly, ba, ml]) => {
         setChannelKPIs(ck);

@@ -224,8 +224,7 @@ export async function fetchRepeatProducts(
 
 // ── Agent 4: Forecasts ─────────────────────────────────────────────────────
 export async function fetchForecasts(
-  country?: string, region?: string, product?: string, category?: string, month?: string,
-  startDate?: string, endDate?: string
+  country?: string, region?: string, product?: string, category?: string, month?: string
 ): Promise<Forecast[]> {
   const { data, error } = await supabase.rpc("get_forecasts_v2", {
     p_country:      country    || null,
@@ -233,8 +232,6 @@ export async function fetchForecasts(
     p_product:      product    || null,
     p_category:     category   || null,
     p_target_month: month      || null,
-    p_start_date:   startDate  || null,
-    p_end_date:     endDate    || null,
   });
   if (error) throw new Error(error.message);
   return (data as Forecast[]) ?? [];
@@ -288,7 +285,7 @@ export async function fetchSalesKPIs(
 ): Promise<SalesKPI[]> {
   const { data, error } = await supabase.rpc("get_sales_kpis", {
     p_country:      country    || null,
-    p_region:       region     || null,
+    p_state:        region     || null,
     p_product:      product    || null,
     p_category:     category   || null,
     p_target_month: month      || null,
@@ -305,7 +302,7 @@ export async function fetchMomGrowth(
 ): Promise<MomGrowth[]> {
   const { data, error } = await supabase.rpc("get_mom_growth", {
     p_country:      country    || null,
-    p_region:       region     || null,
+    p_state:        region     || null,
     p_product:      product    || null,
     p_category:     category   || null,
     p_target_month: month      || null,
@@ -373,8 +370,7 @@ export type ChannelKPI = {
 };
 
 export async function fetchCustomerBehavior(
-  country?: string, region?: string, category?: string, product?: string, month?: string,
-  startDate?: string, endDate?: string
+  country?: string, region?: string, category?: string, product?: string, month?: string
 ): Promise<CustomerBehaviorRow[]> {
   const { data, error } = await supabase.rpc("get_dynamic_ml_insights", {
     p_country:      country    || null,
@@ -382,8 +378,6 @@ export async function fetchCustomerBehavior(
     p_category:     category   || null,
     p_product:      product    || null,
     p_target_month: month      || null,
-    p_start_date:   startDate  || null,
-    p_end_date:     endDate    || null,
   });
   if (error) throw new Error(error.message);
   return (data as CustomerBehaviorRow[]) ?? [];

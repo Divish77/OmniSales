@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CATEGORIES as APP_CATEGORIES } from "@/app/AddSalePage";
 import { useGlobalFilters } from "@/context/FilterContext";
 import type { DatePreset } from "@/context/FilterContext";
-import { DATE_PRESET_LABELS, calcPresetRange, toLocalDateStr } from "@/context/FilterContext";
+import { DATE_PRESET_LABELS, toLocalDateStr } from "@/context/FilterContext";
 
 type CountryRegion = { country: string; region: string };
 
